@@ -3,61 +3,62 @@
 #include <unordered_map>
 #include <cstring>
 
-int romanos_para_decimal(const char* num_romano) {
-    // mapeia cada símbolo romano para seu valor decimal
-    std::unordered_map<char, int> valores = {
-        {'I', 1},
-        {'V', 5},
-        {'X', 10},
-        {'L', 50},
-        {'C', 100},
-        {'D', 500},
-        {'M', 1000}
-    };
+using std::unordered_map;
+using std::strlen;
+//Associação dos valores decimais aos algarismos romanos
+int romanos_para_decimal(char const * num_romano) {
+    unordered_map<char, int> mapeamento_simbolos = {
+    {'I', 1}, 
+    {'V', 5}, 
+    {'X', 10},
+    {'L', 50}, 
+    {'C', 100}, 
+    {'D', 500}, 
+    {'M', 1000}};
+    int resultado = 0;
+    int tamanho_num_romano = strlen(num_romano);
+
+//Identificação de casos inválidos com algarismos repetidos
+    if (strstr(num_romano, "IIII") != nullptr)
+    { return -1; }
+    else if (strstr(num_romano, "XXXX") != nullptr)
+    { return -1; }
+    else if (strstr(num_romano, "CCCC") != nullptr)
+    { return -1; }
+    else if (strstr(num_romano, "VV") != nullptr)
+    { return -1; }
+    else if (strstr(num_romano, "LL") != nullptr)
+    { return -1; }
+    else if (strstr(num_romano, "DD") != nullptr)
+    { return -1; }
     
-    int decimal = 0;
-    int ultimo_valor = 0;
-    int repeticoes = 0;
-    char ultimo_caractere = '\0';
-    
-    // percorre o número romano da direita para a esquerda
-    for (int i = strlen(num_romano) - 1; i >= 0; i--) {
-        // verifica se o caractere atual é um símbolo romano válido
-        if (valores.find(num_romano[i]) == valores.end()) {
-            return -1; // retorna -1 para casos inválidos
+//Identificação de casos inválidos com algarismos fora do alfabeto de números romanos
+    for (int i = 0; i < tamanho_num_romano; i++) {
+        if (mapeamento_simbolos.find(num_romano[i]) == mapeamento_simbolos.end()) {
+            return -1;
         }
-        
-        // obtém o valor decimal do símbolo romano atual
-        int valor = valores[num_romano[i]];
-        
-        // verifica se o valor atual é menor ou maior que o valor anterior
-        if (valor < ultimo_valor) {
-            decimal -= valor; // subtrai o valor atual do decimal
-            repeticoes = 0; // reinicia a contagem de repetições
-        } else {
-            decimal += valor; // adiciona o valor atual ao decimal
-            ultimo_valor = valor; // atualiza o último valor
-            
-            // verifica se o valor atual é igual ao valor anterior
-            if (valor == ultimo_valor) {
-                repeticoes++; // incrementa a contagem de repetições
-                if (repeticoes > 2) {
-                    return -1; // retorna -1 para mais de 3 repetições seguidas
-                }
+        int valor_atual = mapeamento_simbolos[num_romano[i]];
+
+ //Identificação de casos inválidos com algarismos em combinação errada
+        if (i < tamanho_num_romano - 1 && mapeamento_simbolos[num_romano[i+1]] > valor_atual) {
+            if (valor_atual == 1 && (num_romano[i+1] ==
+                'V' || num_romano[i+1] == 'X')) {
+                resultado -= valor_atual;
+            } else if (valor_atual == 10 && (num_romano[i+1] ==
+                       'L' || num_romano[i+1] == 'C')) {
+                resultado -= valor_atual;
+            } else if (valor_atual == 100 && (num_romano[i+1] ==
+                      'D' || num_romano[i+1] == 'M')) {
+                resultado -= valor_atual;
             } else {
-                repeticoes = 0; // reinicia a contagem de repetições
+                return -1;
             }
+
+        } else {
+            resultado += valor_atual;
         }
-        
-        // verifica se o caractere atual é igual ao último caractere e se é um dos caracteres proibidos
-        if (num_romano[i] == ultimo_caractere && (num_romano[i] == 'V' || num_romano[i] == 'L' || num_romano[i] == 'D')) {
-            return -1; // retorna -1 para casos proibidos
-        }
-        
-        // atualiza o último caractere
-        ultimo_caractere = num_romano[i];
     }
-    
-    return decimal;
+
+    return resultado;
 }
 

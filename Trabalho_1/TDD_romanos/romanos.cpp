@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include <cstring>
 
-
 int romanos_para_decimal(const char* num_romano) {
     // mapeia cada símbolo romano para seu valor decimal
     std::unordered_map<char, int> valores = {
@@ -19,6 +18,7 @@ int romanos_para_decimal(const char* num_romano) {
     int decimal = 0;
     int ultimo_valor = 0;
     int repeticoes = 0;
+    char ultimo_caractere = '\0';
     
     // percorre o número romano da direita para a esquerda
     for (int i = strlen(num_romano) - 1; i >= 0; i--) {
@@ -48,6 +48,14 @@ int romanos_para_decimal(const char* num_romano) {
                 repeticoes = 0; // reinicia a contagem de repetições
             }
         }
+        
+        // verifica se o caractere atual é igual ao último caractere e se é um dos caracteres proibidos
+        if (num_romano[i] == ultimo_caractere && (num_romano[i] == 'V' || num_romano[i] == 'L' || num_romano[i] == 'D')) {
+            return -1; // retorna -1 para casos proibidos
+        }
+        
+        // atualiza o último caractere
+        ultimo_caractere = num_romano[i];
     }
     
     return decimal;

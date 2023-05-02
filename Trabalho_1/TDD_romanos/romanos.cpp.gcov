@@ -1,0 +1,69 @@
+        -:    0:Source:romanos.cpp
+        -:    1:// Copyright (c) 2023, Nicole Ferreira Gomes
+        -:    2:#include "romanos.hpp"
+        -:    3:#include <iostream>
+        -:    4:#include <unordered_map>
+        -:    5:#include <cstring>
+        -:    6:
+        -:    7:using std::unordered_map;
+        -:    8:using std::strlen;
+        -:    9:// Associação dos valores decimais aos algarismos romanos
+       24:   10:int romanos_para_decimal(char const * num_romano) {
+        -:   11:    unordered_map<char, int> mapeamento_simbolos = {
+        -:   12:    {'I', 1},
+        -:   13:    {'V', 5},
+        -:   14:    {'X', 10},
+        -:   15:    {'L', 50},
+        -:   16:    {'C', 100},
+        -:   17:    {'D', 500},
+       24:   18:    {'M', 1000}};
+       24:   19:    int resultado = 0;
+       24:   20:    int tamanho_num_romano = strlen(num_romano);
+        -:   21:
+        -:   22:// Identificação de casos inválidos com algarismos repetidos
+       24:   23:    if (strstr(num_romano, "IIII") != nullptr)
+        1:   24:    { return -1; }
+       23:   25:    else if (strstr(num_romano, "XXXX") != nullptr)
+        1:   26:    { return -1; }
+       22:   27:    else if (strstr(num_romano, "CCCC") != nullptr)
+    #####:   28:    { return -1; }
+       22:   29:    else if (strstr(num_romano, "VV") != nullptr)
+        1:   30:    { return -1; }
+       21:   31:    else if (strstr(num_romano, "LL") != nullptr)
+    #####:   32:    { return -1; }
+       21:   33:    else if (strstr(num_romano, "DD") != nullptr)
+    #####:   34:    { return -1; }
+        -:   35:
+        -:   36:// Identificação de casos inválidos com algarismos
+        -:   37:// fora do alfabeto de números romanos
+      104:   38:    for (int i = 0; i < tamanho_num_romano; i++) {
+       89:   39:        if (mapeamento_simbolos.find(num_romano[i]) ==
+      178:   40:        mapeamento_simbolos.end()) {
+        3:   41:            return -1;
+        -:   42:        }
+       86:   43:        int valor_atual = mapeamento_simbolos[num_romano[i]];
+        -:   44:
+        -:   45:// Identificação de casos inválidos com algarismos em combinação errada
+      157:   46:        if (i < tamanho_num_romano - 1 &&
+       71:   47:        mapeamento_simbolos[num_romano[i+1]] > valor_atual) {
+       11:   48:            if (valor_atual == 1 && (num_romano[i+1] ==
+        2:   49:                'V' || num_romano[i+1] == 'X')) {
+        1:   50:                resultado -= valor_atual;
+       10:   51:            } else if (valor_atual == 10 && (num_romano[i+1] ==
+        2:   52:                       'L' || num_romano[i+1] == 'C')) {
+        2:   53:                resultado -= valor_atual;
+        8:   54:            } else if (valor_atual == 100 && (num_romano[i+1] ==
+        3:   55:                      'D' || num_romano[i+1] == 'M')) {
+        5:   56:                resultado -= valor_atual;
+        -:   57:            } else {
+        3:   58:                return -1;
+        -:   59:            }
+        -:   60:
+        -:   61:        } else {
+       75:   62:            resultado += valor_atual;
+        -:   63:        }
+        -:   64:    }
+        -:   65:
+       15:   66:    return resultado;
+       24:   67:}
+        -:   68:

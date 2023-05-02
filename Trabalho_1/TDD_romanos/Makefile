@@ -28,7 +28,8 @@ cppcheck: testa_romanos.cpp   romanos.cpp romanos.hpp
 	cppcheck  --enable=warning . 
 
 valgrind: testa_romanos
-	valgrind --leak-check=yes --log-file=valgrind.rpt testa_romanos
+	#valgrind --leak-check=yes --log-file=valgrind.rpt testa_romanos (código usado pelo Jan)
+	valgrind --leak-check=full --show-leak-kinds=all ./testa_romanos
 
 romanos.o : romanos.cpp romanos.hpp
 	g++ -std=c++11 -Wall -Wall -c romanos.cpp

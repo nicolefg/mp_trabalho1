@@ -5,6 +5,7 @@
 
 TEST_CASE( "Numeros romanos - algarismos únicos", "[romanos]" ) {
     REQUIRE( romanos_para_decimal("I") == 1 );
+    REQUIRE( romanos_para_decimal("II") == 2 );
     
     REQUIRE( romanos_para_decimal("V") == 5 );
 

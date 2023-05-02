@@ -18,6 +18,7 @@ int romanos_para_decimal(const char* num_romano) {
     
     int decimal = 0;
     int ultimo_valor = 0;
+    int repeticoes = 0;
     
     // percorre o número romano da direita para a esquerda
     for (int i = strlen(num_romano) - 1; i >= 0; i--) {
@@ -32,11 +33,23 @@ int romanos_para_decimal(const char* num_romano) {
         // verifica se o valor atual é menor ou maior que o valor anterior
         if (valor < ultimo_valor) {
             decimal -= valor; // subtrai o valor atual do decimal
+            repeticoes = 0; // reinicia a contagem de repetições
         } else {
             decimal += valor; // adiciona o valor atual ao decimal
             ultimo_valor = valor; // atualiza o último valor
+            
+            // verifica se o valor atual é igual ao valor anterior
+            if (valor == ultimo_valor) {
+                repeticoes++; // incrementa a contagem de repetições
+                if (repeticoes > 2) {
+                    return -1; // retorna -1 para mais de 3 repetições seguidas
+                }
+            } else {
+                repeticoes = 0; // reinicia a contagem de repetições
+            }
         }
     }
     
     return decimal;
 }
+
